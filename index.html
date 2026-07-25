@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#f7f8fc" />
+    <link rel="icon" href="data:," />
+    <title>在线拆谷工具</title>
+    <link rel="stylesheet" href="style.css?v=9" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <span class="brand-mark">谷</span>
+          <span>在线拆谷工具</span>
+        </div>
+        <button class="icon-button" id="settingsButton" type="button" aria-label="编辑方案">设置</button>
+      </header>
+
+      <section class="stage" aria-live="polite">
+        <p class="eyebrow" id="schemeMeta">当前方案 · 6 个选项</p>
+        <h1 id="schemeTitle">今天拆哪一谷？</h1>
+        <p class="helper" id="drawHint">点击卡片，随机揭晓一个结果</p>
+
+        <button class="flip-card" id="drawCard" type="button" aria-label="点击抽取结果">
+          <span class="card-inner" id="cardInner">
+            <span class="card-face card-front" id="cardFront">
+              <span class="question-mark">?</span>
+              <span class="card-caption">点击揭晓</span>
+            </span>
+            <span class="card-face card-back" id="cardBack">
+              <span class="result-label">本次结果</span>
+              <strong id="resultText">准备好了</strong>
+              <span class="again-label">再次点击重新抽取</span>
+            </span>
+          </span>
+        </button>
+
+        <div class="actions">
+          <button class="secondary-button" id="shuffleButton" type="button">打乱卡片</button>
+        </div>
+      </section>
+
+      <aside class="settings-panel" id="settingsPanel" aria-hidden="true">
+        <div class="panel-scrim" id="panelScrim"></div>
+        <section class="panel-content" aria-label="方案设置">
+          <header class="panel-header">
+            <div>
+              <p class="eyebrow">方案设置</p>
+              <h2>编辑选项</h2>
+            </div>
+            <button class="icon-button" id="closeSettings" type="button" aria-label="关闭设置">关闭</button>
+          </header>
+
+          <label class="field title-field">
+            <span>方案名称</span>
+            <input id="schemeNameInput" maxlength="30" placeholder="例如：今天拆哪一谷？" />
+          </label>
+
+          <div class="setting-row switch-row">
+            <div>
+              <strong>不重复抽取</strong>
+              <p>关闭时，已抽中的选项仍会参与下一次抽取</p>
+            </div>
+            <label class="switch">
+              <input id="noRepeatToggle" type="checkbox" />
+              <span></span>
+            </label>
+          </div>
+
+          <div class="options-heading">
+            <div>
+              <h3>选项与权重</h3>
+              <p>权重越高，抽中的概率越大</p>
+            </div>
+            <span id="totalWeight">总权重 0</span>
+          </div>
+          <div class="option-list" id="optionList"></div>
+          <button class="add-button" id="addOption" type="button">+ 添加选项</button>
+          <p class="validation" id="validationMessage"></p>
+        </section>
+      </aside>
+    </main>
+    <script src="app.js?v=9"></script>
+  </body>
+</html>
