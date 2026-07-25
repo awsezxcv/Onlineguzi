@@ -222,6 +222,17 @@ function randomizeCardColor() {
   applyCardColor(nextColor);
 }
 
+function shuffleOptions() {
+  const original = state.options.slice();
+  for (let index = state.options.length - 1; index > 0; index -= 1) {
+    const swapIndex = secureRandom(index + 1);
+    [state.options[index], state.options[swapIndex]] = [state.options[swapIndex], state.options[index]];
+  }
+  if (state.options.length > 1 && state.options.every((option, index) => option.id === original[index].id)) {
+    state.options.push(state.options.shift());
+  }
+}
+
 function resetCard() {
   drawCycle += 1;
   el.drawCard.classList.add("is-resetting");
@@ -258,6 +269,7 @@ function draw() {
 }
 
 function shuffleColors() {
+  shuffleOptions();
   randomizeCardColor();
   resetCard();
   const cycle = ++shakeCycle;
@@ -268,6 +280,7 @@ function shuffleColors() {
     if (cycle === shakeCycle) el.drawCard.classList.remove("is-shaking");
   }, 320);
   renderStage();
+  renderOptions();
   save();
 }
 
