@@ -13,12 +13,12 @@ function createPlan(title = "今天拆哪一谷？") {
     noRepeat: false,
     colors: palette.slice(0, 6),
     options: [
-      { id: createId(), name: "徽章", weight: 35, selected: false },
-      { id: createId(), name: "立牌", weight: 25, selected: false },
-      { id: createId(), name: "色纸", weight: 20, selected: false },
-      { id: createId(), name: "挂件", weight: 12, selected: false },
-      { id: createId(), name: "明信片", weight: 6, selected: false },
-      { id: createId(), name: "隐藏款", weight: 2, selected: false }
+      { id: createId(), name: "徽章", weight: 1, selected: false },
+      { id: createId(), name: "立牌", weight: 1, selected: false },
+      { id: createId(), name: "色纸", weight: 1, selected: false },
+      { id: createId(), name: "挂件", weight: 1, selected: false },
+      { id: createId(), name: "明信片", weight: 1, selected: false },
+      { id: createId(), name: "隐藏款", weight: 1, selected: false }
     ]
   };
 }
