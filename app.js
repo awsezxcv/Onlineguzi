@@ -152,14 +152,29 @@ function chooseOption() {
   return candidates.find(option => (cursor -= Number(option.weight)) < 0) || candidates[candidates.length - 1];
 }
 
-function restartFlip(cycle) {
-  el.drawCard.classList.remove("is-flipping", "is-flipped");
+function cardRotation() {
+  const transform = getComputedStyle(el.cardInner).transform;
+  if (transform === "none") return hasResult ? 180 : 0;
+  const matrix3d = transform.match(/matrix3d\((.+)\)/);
+  if (matrix3d) {
+    const values = matrix3d[1].split(",").map(Number);
+    if (values.length === 16) return Math.atan2(-values[2], values[0]) * 180 / Math.PI;
+  }
+  const matrix = transform.match(/matrix\((.+)\)/);
+  if (matrix) {
+    const values = matrix[1].split(",").map(Number);
+    if (values.length === 6) return Math.atan2(values[1], values[0]) * 180 / Math.PI;
+  }
+  return hasResult ? 180 : 0;
+}
+
+function restartFlipFromCurrentAngle() {
+  const start = cardRotation();
+  el.cardInner.style.setProperty("--redraw-start", `${start}deg`);
+  el.cardInner.style.setProperty("--redraw-end", "540deg");
+  el.drawCard.classList.remove("is-redrawing");
   void el.cardInner.offsetWidth;
-  if (cycle !== drawCycle) return;
-  el.drawCard.classList.add("is-flipped", "is-flipping");
-  window.setTimeout(() => {
-    if (cycle === drawCycle) el.drawCard.classList.remove("is-flipping");
-  }, 720);
+  el.drawCard.classList.add("is-redrawing");
 }
 
 function randomizeCardColor() {
@@ -178,6 +193,7 @@ function draw() {
     return;
   }
   randomizeCardColor();
+  const wasRevealed = hasResult;
   el.resultText.textContent = picked.name;
   if (state.noRepeat) picked.selected = true;
   hasResult = true;
@@ -185,13 +201,23 @@ function draw() {
   save();
   renderStage();
   renderOptions();
+  if (wasRevealed) {
+    restartFlipFromCurrentAngle();
+  } else {
+    el.drawCard.classList.add("is-flipped");
+  }
   const cycle = ++drawCycle;
-  restartFlip(cycle);
+  window.setTimeout(() => {
+    if (cycle === drawCycle) el.drawCard.classList.remove("is-redrawing");
+  }, 740);
 }
 
 function shuffleColors() {
   randomizeCardColor();
-  el.drawCard.classList.remove("is-flipping", "is-flipped");
+  el.drawCard.classList.add("is-resetting");
+  el.drawCard.classList.remove("is-flipped", "is-redrawing");
+  void el.cardInner.offsetWidth;
+  el.drawCard.classList.remove("is-resetting");
   el.resultText.textContent = "准备好了";
   hasResult = false;
   renderStage();
