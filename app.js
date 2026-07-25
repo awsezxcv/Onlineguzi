@@ -77,6 +77,8 @@ const el = {
   createPlan: document.querySelector("#createPlanButton"),
   backToPlans: document.querySelector("#backToPlans"),
   deletePlan: document.querySelector("#deletePlanButton"),
+  panelKicker: document.querySelector("#panelKicker"),
+  panelTitle: document.querySelector("#panelTitle"),
   schemeName: document.querySelector("#schemeNameInput"),
   noRepeat: document.querySelector("#noRepeatToggle"),
   totalWeight: document.querySelector("#totalWeight"),
@@ -264,12 +266,18 @@ function shuffleColors() {
 function showPlanList() {
   el.planListView.hidden = false;
   el.planEditorView.hidden = true;
+  el.panelKicker.textContent = "方案管理";
+  el.panelTitle.textContent = "我的方案";
   renderPlans();
 }
 
-function showPlanEditor() {
+function showPlanEditor(canManagePlans = false) {
   el.planListView.hidden = true;
   el.planEditorView.hidden = false;
+  el.backToPlans.hidden = !canManagePlans;
+  el.deletePlan.hidden = !canManagePlans;
+  el.panelKicker.textContent = "方案设置";
+  el.panelTitle.textContent = "编辑选项";
   renderAll();
 }
 
@@ -281,11 +289,17 @@ function selectPlan(id, edit = false) {
   resetCard();
   save();
   renderAll();
-  if (edit) showPlanEditor();
+  if (edit) showPlanEditor(true);
   else closePanel();
 }
 
 function openPanel() {
+  el.settingsPanel.classList.add("is-open");
+  el.settingsPanel.setAttribute("aria-hidden", "false");
+  showPlanEditor();
+}
+
+function openPlanManager() {
   el.settingsPanel.classList.add("is-open");
   el.settingsPanel.setAttribute("aria-hidden", "false");
   showPlanList();
@@ -299,6 +313,7 @@ function closePanel() {
 el.drawCard.addEventListener("click", draw);
 el.shuffle.addEventListener("click", shuffleColors);
 el.settingsButton.addEventListener("click", openPanel);
+el.title.addEventListener("click", openPlanManager);
 el.closeSettings.addEventListener("click", closePanel);
 el.panelScrim.addEventListener("click", closePanel);
 el.backToPlans.addEventListener("click", showPlanList);
@@ -316,7 +331,7 @@ el.createPlan.addEventListener("click", () => {
   state = plan;
   resetCard();
   save();
-  showPlanEditor();
+  showPlanEditor(true);
   el.schemeName.focus();
   el.schemeName.select();
 });

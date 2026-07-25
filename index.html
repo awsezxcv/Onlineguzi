@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#f7f8fc" />
     <link rel="icon" href="data:," />
     <title>在线拆谷工具</title>
-    <link rel="stylesheet" href="style.css?v=11" />
+    <link rel="stylesheet" href="style.css?v=12" />
   </head>
   <body>
     <main class="app-shell">
@@ -20,7 +20,7 @@
 
       <section class="stage" aria-live="polite">
         <p class="eyebrow" id="schemeMeta">当前方案 · 6 个选项</p>
-        <h1 id="schemeTitle">今天拆哪一谷？</h1>
+        <h1><button class="scheme-title" id="schemeTitle" type="button" aria-label="切换或管理方案">今天拆哪一谷？</button></h1>
         <p class="helper" id="drawHint">点击卡片，随机揭晓一个结果</p>
 
         <button class="flip-card" id="drawCard" type="button" aria-label="点击抽取结果">
@@ -47,8 +47,8 @@
         <section class="panel-content" aria-label="方案设置">
           <header class="panel-header">
             <div>
-              <p class="eyebrow">方案管理</p>
-              <h2>我的方案</h2>
+              <p class="eyebrow" id="panelKicker">方案设置</p>
+              <h2 id="panelTitle">编辑选项</h2>
             </div>
             <button class="icon-button" id="closeSettings" type="button" aria-label="关闭设置">关闭</button>
           </header>
@@ -93,6 +93,6 @@
         </section>
       </aside>
     </main>
-    <script src="app.js?v=11"></script>
+    <script src="app.js?v=12"></script>
   </body>
 </html>
