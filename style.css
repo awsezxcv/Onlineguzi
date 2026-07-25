@@ -152,6 +152,18 @@ h2, h3 { margin: 0; letter-spacing: 0; }
 h2 { font-size: 25px; }
 h3 { font-size: 17px; }
 
+.scheme-list { display: grid; gap: 10px; }
+.scheme-item { display: flex; align-items: stretch; min-height: 78px; overflow: hidden; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+.scheme-item.is-active { border-color: var(--blue); box-shadow: 0 0 0 2px rgba(79, 143, 247, .14); }
+.scheme-select { display: grid; min-width: 0; flex: 1; padding: 14px 16px; border: 0; background: transparent; gap: 4px; text-align: left; }
+.scheme-select strong { overflow: hidden; font-size: 16px; text-overflow: ellipsis; white-space: nowrap; }
+.scheme-select span { color: var(--muted); font-size: 13px; }
+.scheme-edit { width: 68px; border: 0; border-left: 1px solid var(--line); color: var(--blue-dark); background: #f7fbff; font-size: 14px; font-weight: 700; }
+.editor-toolbar { display: flex; align-items: center; justify-content: space-between; margin: -4px 0 22px; }
+.text-button { padding: 0; border: 0; color: var(--blue-dark); background: transparent; font-weight: 700; }
+.danger-button { color: #c62d4b; }
+.text-button:disabled { color: #a2a7b4; }
+
 .field { display: grid; gap: 8px; margin-bottom: 22px; color: var(--muted); font-size: 14px; font-weight: 650; }
 .field input, .option-name, .option-weight { width: 100%; border: 1px solid var(--line); border-radius: 8px; outline: 0; background: #fff; }
 .field input { min-height: 46px; padding: 0 13px; color: var(--ink); }

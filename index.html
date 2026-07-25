@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#f7f8fc" />
     <link rel="icon" href="data:," />
     <title>在线拆谷工具</title>
-    <link rel="stylesheet" href="style.css?v=10" />
+    <link rel="stylesheet" href="style.css?v=11" />
   </head>
   <body>
     <main class="app-shell">
@@ -47,16 +47,26 @@
         <section class="panel-content" aria-label="方案设置">
           <header class="panel-header">
             <div>
-              <p class="eyebrow">方案设置</p>
-              <h2>编辑选项</h2>
+              <p class="eyebrow">方案管理</p>
+              <h2>我的方案</h2>
             </div>
             <button class="icon-button" id="closeSettings" type="button" aria-label="关闭设置">关闭</button>
           </header>
 
-          <label class="field title-field">
+          <section id="planListView">
+            <div class="scheme-list" id="schemeList"></div>
+            <button class="add-button" id="createPlanButton" type="button">+ 新建方案</button>
+          </section>
+
+          <section id="planEditorView" hidden>
+            <div class="editor-toolbar">
+              <button class="text-button" id="backToPlans" type="button">返回方案列表</button>
+              <button class="text-button danger-button" id="deletePlanButton" type="button">删除方案</button>
+            </div>
+            <label class="field title-field">
             <span>方案名称</span>
             <input id="schemeNameInput" maxlength="30" placeholder="例如：今天拆哪一谷？" />
-          </label>
+            </label>
 
           <div class="setting-row switch-row">
             <div>
@@ -79,9 +89,10 @@
           <div class="option-list" id="optionList"></div>
           <button class="add-button" id="addOption" type="button">+ 添加选项</button>
           <p class="validation" id="validationMessage"></p>
+          </section>
         </section>
       </aside>
     </main>
-    <script src="app.js?v=10"></script>
+    <script src="app.js?v=11"></script>
   </body>
 </html>
