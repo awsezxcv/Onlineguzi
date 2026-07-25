@@ -105,11 +105,21 @@ h1 { margin: 0; font-size: 26px; letter-spacing: 0; }
 .flip-card.is-flipped .card-inner { transform: rotateY(180deg); -webkit-transform: rotateY(180deg); }
 .flip-card.is-redrawing .card-inner { animation: redraw-card 720ms cubic-bezier(.2, .8, .2, 1); transition: none; }
 .flip-card.is-resetting .card-inner { transform: rotateY(0deg); transition: none; }
+.flip-card.is-shaking { animation: shake-card 300ms ease-in-out; }
 .flip-card:focus-visible { outline: 4px solid #8ec5ff; outline-offset: 5px; border-radius: 42px; }
 
 @keyframes redraw-card {
   from { transform: rotateY(var(--redraw-start, 180deg)); }
   to { transform: rotateY(var(--redraw-end, 540deg)); }
+}
+
+@keyframes shake-card {
+  0%, 100% { transform: translateX(0); }
+  16% { transform: translateX(-12px); }
+  33% { transform: translateX(12px); }
+  50% { transform: translateX(-8px); }
+  67% { transform: translateX(8px); }
+  84% { transform: translateX(-4px); }
 }
 
 @supports (aspect-ratio: 1 / 1) {

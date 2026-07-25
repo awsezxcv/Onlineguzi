@@ -56,6 +56,7 @@ let workspace = loadWorkspace();
 let state = workspace.plans.find(plan => plan.id === workspace.activePlanId);
 let hasResult = false;
 let drawCycle = 0;
+let shakeCycle = 0;
 
 const el = {
   drawCard: document.querySelector("#drawCard"),
@@ -259,6 +260,13 @@ function draw() {
 function shuffleColors() {
   randomizeCardColor();
   resetCard();
+  const cycle = ++shakeCycle;
+  el.drawCard.classList.remove("is-shaking");
+  void el.drawCard.offsetWidth;
+  el.drawCard.classList.add("is-shaking");
+  window.setTimeout(() => {
+    if (cycle === shakeCycle) el.drawCard.classList.remove("is-shaking");
+  }, 320);
   renderStage();
   save();
 }
