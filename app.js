@@ -1,12 +1,12 @@
 const storageKey = "online-chaigu-tool-v2";
 const legacyStorageKey = "online-chaigu-tool-v1";
-const palette = ["#F7235F", "#ED38AA", "#1F4EEA", "#7394FF", "#2FE1C3", "#50DB7A", "#5BD939", "#E5DA0E", "#F0CF2D", "#ED9333", "#FF6969", "#DC2424"];
+const palette = ["#F7235F", "#ED38AA", "#1F4EEA", "#7394FF", "#2FE1C3", "#50DB7A", "#B6825D", "#1EF61A", "#F0CF2D", "#ED9333", "#FF6969", "#DC2424"];
 
 function createId() {
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
 }
 
-function createPlan(title = "今天拆哪一谷？") {
+function createPlan(title = "点我打开方案配置") {
   return {
     id: createId(),
     title,
@@ -40,16 +40,23 @@ function loadWorkspace() {
     if (saved && saved.plans && saved.plans.length) {
       const plans = saved.plans.map(normalizePlan);
       const activePlanId = plans.some(plan => plan.id === saved.activePlanId) ? saved.activePlanId : plans[0].id;
-      return { plans, activePlanId };
+      const history = Array.isArray(saved.history) ? saved.history.filter(item => item && item.result).slice(0, 100) : [];
+      return { plans, activePlanId, history };
     }
     const legacy = JSON.parse(localStorage.getItem(legacyStorageKey));
     if (legacy && legacy.options && legacy.options.length) {
       const plan = normalizePlan(legacy);
-      return { plans: [plan], activePlanId: plan.id };
+      return { plans: [plan], activePlanId: plan.id, history: [] };
     }
   } catch {}
   const plan = createPlan();
-  return { plans: [plan], activePlanId: plan.id };
+  return { plans: [plan], activePlanId: plan.id, history: [] };
+}
+
+function formatHistoryTime(timestamp) {
+  const date = new Date(timestamp);
+  const pad = value => String(value).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
 }
 
 let workspace = loadWorkspace();
@@ -68,6 +75,13 @@ const el = {
   title: document.querySelector("#schemeTitle"),
   meta: document.querySelector("#schemeMeta"),
   shuffle: document.querySelector("#shuffleButton"),
+  historyButton: document.querySelector("#historyButton"),
+  historyPanel: document.querySelector("#historyPanel"),
+  historyPanelScrim: document.querySelector("#historyPanelScrim"),
+  closeHistory: document.querySelector("#closeHistory"),
+  historySummary: document.querySelector("#historySummary"),
+  historyList: document.querySelector("#historyList"),
+  historyEmpty: document.querySelector("#historyEmpty"),
   settingsPanel: document.querySelector("#settingsPanel"),
   settingsButton: document.querySelector("#settingsButton"),
   closeSettings: document.querySelector("#closeSettings"),
@@ -131,6 +145,19 @@ function renderPlans() {
   });
 }
 
+function renderHistory() {
+  const history = workspace.history || [];
+  el.historySummary.textContent = `最近 ${history.length} 条 · 最多保留 100 条`;
+  el.historyList.innerHTML = "";
+  el.historyEmpty.hidden = history.length > 0;
+  history.forEach(item => {
+    const row = document.createElement("div");
+    row.className = "history-item";
+    row.innerHTML = `<div class="history-main"><strong>${escapeHtml(item.result)}</strong><span>${escapeHtml(item.planTitle || "未命名方案")}</span></div><time>${formatHistoryTime(item.timestamp)}</time>`;
+    el.historyList.append(row);
+  });
+}
+
 function renderOptions() {
   const total = state.options.reduce((sum, option) => sum + (option.name.trim() ? Number(option.weight) || 0 : 0), 0);
   el.totalWeight.textContent = `总权重 ${total}`;
@@ -138,7 +165,7 @@ function renderOptions() {
   state.options.forEach((option, index) => {
     const row = document.createElement("div");
     row.className = "option-row";
-    row.innerHTML = `<input class="option-name" data-id="${option.id}" aria-label="选项内容" maxlength="30" value="${escapeHtml(option.name)}" placeholder="选项内容" /><input class="option-weight" data-id="${option.id}" aria-label="权重" type="number" min="1" max="9999" value="${option.weight}" /><span class="probability">${formatProbability(option.weight, total)}</span><button class="delete-option" data-id="${option.id}" type="button" aria-label="删除 ${index + 1}">×</button>`;
+    row.innerHTML = `<input class="option-name" data-id="${option.id}" aria-label="选项内容" maxlength="30" value="${escapeHtml(option.name)}" placeholder="选项内容" /><input class="option-weight" data-id="${option.id}" aria-label="权重" type="number" min="1" max="9999" value="${option.weight}" /><span class="probability">${formatProbability(option.weight, total)}</span><button class="delete-option" data-id="${option.id}" type="button" aria-label="删除 ${index + 1}"><img class="delete-icon" src="assets/close-line.svg" alt="" /></button>`;
     el.options.append(row);
   });
   validate();
@@ -172,6 +199,7 @@ function renderAll() {
   renderStage();
   renderPlans();
   renderOptions();
+  renderHistory();
 }
 
 function secureRandom(max) {
@@ -243,6 +271,13 @@ function resetCard() {
   hasResult = false;
 }
 
+function recordHistory(result) {
+  workspace.history.unshift({ id: createId(), result, planTitle: state.title || "未命名方案", timestamp: Date.now() });
+  if (workspace.history.length > 100) workspace.history.length = 100;
+  renderHistory();
+  save();
+}
+
 function draw() {
   const picked = chooseOption();
   if (!picked) {
@@ -263,6 +298,10 @@ function draw() {
   if (wasRevealed) restartFlipFromCurrentAngle();
   else el.drawCard.classList.add("is-flipped");
   const cycle = ++drawCycle;
+  window.setTimeout(() => {
+    if (cycle !== drawCycle) return;
+    recordHistory(picked.name);
+  }, 360);
   window.setTimeout(() => {
     if (cycle === drawCycle) el.drawCard.classList.remove("is-redrawing");
   }, 740);
@@ -331,12 +370,26 @@ function closePanel() {
   el.settingsPanel.setAttribute("aria-hidden", "true");
 }
 
+function openHistory() {
+  el.historyPanel.classList.add("is-open");
+  el.historyPanel.setAttribute("aria-hidden", "false");
+  renderHistory();
+}
+
+function closeHistory() {
+  el.historyPanel.classList.remove("is-open");
+  el.historyPanel.setAttribute("aria-hidden", "true");
+}
+
 el.drawCard.addEventListener("click", draw);
 el.shuffle.addEventListener("click", shuffleColors);
+el.historyButton.addEventListener("click", openHistory);
 el.settingsButton.addEventListener("click", openPanel);
 el.title.addEventListener("click", openPlanManager);
 el.closeSettings.addEventListener("click", closePanel);
 el.panelScrim.addEventListener("click", closePanel);
+el.closeHistory.addEventListener("click", closeHistory);
+el.historyPanelScrim.addEventListener("click", closeHistory);
 el.backToPlans.addEventListener("click", showPlanList);
 
 el.schemeList.addEventListener("click", event => {
@@ -394,8 +447,9 @@ el.options.addEventListener("input", event => {
 });
 
 el.options.addEventListener("click", event => {
-  if (!event.target.classList.contains("delete-option") || state.options.length <= 2) return;
-  state.options = state.options.filter(option => option.id !== event.target.dataset.id);
+  const button = event.target.closest(".delete-option");
+  if (!button || state.options.length <= 2) return;
+  state.options = state.options.filter(option => option.id !== button.dataset.id);
   save();
   renderAll();
 });

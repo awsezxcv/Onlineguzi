@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#f7f8fc" />
     <link rel="icon" href="data:," />
     <title>在线拆谷工具</title>
-    <link rel="stylesheet" href="style.css?v=14" />
+    <link rel="stylesheet" href="style.css?v=18" />
   </head>
   <body>
     <main class="app-shell">
@@ -26,7 +26,7 @@
         <button class="flip-card" id="drawCard" type="button" aria-label="点击抽取结果">
           <span class="card-inner" id="cardInner">
             <span class="card-face card-front" id="cardFront">
-              <span class="question-mark">?</span>
+              <img class="question-mark-icon" src="assets/question-mark.svg" alt="" />
               <span class="card-caption">点击揭晓</span>
             </span>
             <span class="card-face card-back" id="cardBack">
@@ -39,6 +39,7 @@
 
         <div class="actions">
           <button class="secondary-button" id="shuffleButton" type="button">打乱卡片</button>
+          <button class="history-button" id="historyButton" type="button">历史记录</button>
         </div>
       </section>
 
@@ -92,7 +93,26 @@
           </section>
         </section>
       </aside>
+
+      <aside class="settings-panel history-panel" id="historyPanel" aria-hidden="true">
+        <div class="panel-scrim" id="historyPanelScrim"></div>
+        <section class="panel-content" aria-label="历史记录">
+          <header class="panel-header">
+            <div>
+              <p class="eyebrow">翻牌结果</p>
+              <h2>历史记录</h2>
+            </div>
+            <button class="icon-button" id="closeHistory" type="button">关闭</button>
+          </header>
+          <p class="history-summary" id="historySummary"></p>
+          <div class="history-list" id="historyList"></div>
+          <div class="history-empty" id="historyEmpty">
+            <strong>还没有翻牌记录</strong>
+            <span>点击卡片后，结果会显示在这里</span>
+          </div>
+        </section>
+      </aside>
     </main>
-    <script src="app.js?v=16"></script>
+    <script src="app.js?v=18"></script>
   </body>
 </html>
