@@ -75,6 +75,7 @@ const el = {
   title: document.querySelector("#schemeTitle"),
   meta: document.querySelector("#schemeMeta"),
   shuffle: document.querySelector("#shuffleButton"),
+  shuffleSound: document.querySelector("#shuffleSound"),
   historyButton: document.querySelector("#historyButton"),
   historyPanel: document.querySelector("#historyPanel"),
   historyPanelScrim: document.querySelector("#historyPanelScrim"),
@@ -308,6 +309,8 @@ function draw() {
 }
 
 function shuffleColors() {
+  el.shuffleSound.currentTime = 0;
+  el.shuffleSound.play().catch(() => {});
   shuffleOptions();
   randomizeCardColor();
   resetCard();
