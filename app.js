@@ -131,8 +131,7 @@ function prepareShuffleSound() {
 }
 
 function playShuffleSound() {
-  if (shuffleAudioContext && shuffleAudioBuffer) {
-    unlockShuffleSound();
+  if (shuffleAudioContext && shuffleAudioBuffer && shuffleAudioContext.state === "running") {
     const source = shuffleAudioContext.createBufferSource();
     source.buffer = shuffleAudioBuffer;
     source.connect(shuffleAudioContext.destination);
