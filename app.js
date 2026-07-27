@@ -122,7 +122,7 @@ function prepareShuffleSound() {
   if (!AudioContextClass || !window.fetch) return;
   try {
     shuffleAudioContext = new AudioContextClass({ latencyHint: "interactive" });
-    fetch("assets/audio/daluan.mp3")
+    fetch("assets/audio/daluan.wav")
       .then(response => response.arrayBuffer())
       .then(buffer => shuffleAudioContext.decodeAudioData(buffer))
       .then(buffer => { shuffleAudioBuffer = buffer; })
