@@ -76,6 +76,7 @@ const el = {
   meta: document.querySelector("#schemeMeta"),
   shuffle: document.querySelector("#shuffleButton"),
   shuffleSound: document.querySelector("#shuffleSound"),
+  flipSound: document.querySelector("#flipSound"),
   historyButton: document.querySelector("#historyButton"),
   historyPanel: document.querySelector("#historyPanel"),
   historyPanelScrim: document.querySelector("#historyPanelScrim"),
@@ -286,6 +287,8 @@ function draw() {
     openPanel();
     return;
   }
+  el.flipSound.currentTime = 0;
+  el.flipSound.play().catch(() => {});
   randomizeCardColor();
   const wasRevealed = hasResult;
   el.resultText.textContent = picked.name;
