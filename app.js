@@ -65,6 +65,8 @@ let state = workspace.plans.find(plan => plan.id === workspace.activePlanId);
 let hasResult = false;
 let drawCycle = 0;
 let shakeCycle = 0;
+let shuffleAudioContext;
+let shuffleAudioBuffer;
 
 const el = {
   drawCard: document.querySelector("#drawCard"),
@@ -107,6 +109,38 @@ const el = {
 
 function save() {
   localStorage.setItem(storageKey, JSON.stringify(workspace));
+}
+
+function unlockShuffleSound() {
+  if (shuffleAudioContext && shuffleAudioContext.state === "suspended") {
+    shuffleAudioContext.resume().catch(() => {});
+  }
+}
+
+function prepareShuffleSound() {
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextClass || !window.fetch) return;
+  try {
+    shuffleAudioContext = new AudioContextClass({ latencyHint: "interactive" });
+    fetch("assets/audio/daluan.mp3")
+      .then(response => response.arrayBuffer())
+      .then(buffer => shuffleAudioContext.decodeAudioData(buffer))
+      .then(buffer => { shuffleAudioBuffer = buffer; })
+      .catch(() => {});
+  } catch {}
+}
+
+function playShuffleSound() {
+  if (shuffleAudioContext && shuffleAudioBuffer) {
+    unlockShuffleSound();
+    const source = shuffleAudioContext.createBufferSource();
+    source.buffer = shuffleAudioBuffer;
+    source.connect(shuffleAudioContext.destination);
+    source.start();
+    return;
+  }
+  el.shuffleSound.currentTime = 0;
+  el.shuffleSound.play().catch(() => {});
 }
 
 function activeOptions() {
@@ -316,8 +350,7 @@ function draw() {
 }
 
 function shuffleColors() {
-  el.shuffleSound.currentTime = 0;
-  el.shuffleSound.play().catch(() => {});
+  playShuffleSound();
   shuffleOptions();
   randomizeCardColor();
   resetCard();
@@ -393,6 +426,8 @@ function closeHistory() {
 
 el.drawCard.addEventListener("click", draw);
 el.shuffle.addEventListener("click", shuffleColors);
+prepareShuffleSound();
+document.addEventListener("pointerdown", unlockShuffleSound, { once: true });
 el.historyButton.addEventListener("click", openHistory);
 el.settingsButton.addEventListener("click", openPanel);
 el.title.addEventListener("click", openPlanManager);
