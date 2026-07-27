@@ -64,6 +64,13 @@ h1 { margin: 0; font-size: 26px; letter-spacing: 0; }
 .scheme-title:focus-visible { outline: 3px solid #8ec5ff; outline-offset: 6px; border-radius: 4px; }
 .helper { min-height: 24px; margin: 10px 0 30px; color: var(--muted); }
 
+.flip-card,
+.flip-card * {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
 .flip-card {
   position: relative;
   width: 360px;
