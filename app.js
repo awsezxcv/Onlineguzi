@@ -1,5 +1,6 @@
 const storageKey = "online-chaigu-tool-v2";
 const legacyStorageKey = "online-chaigu-tool-v1";
+const flipSoundEnabled = false;
 const palette = ["#F7235F", "#ED38AA", "#1F4EEA", "#7394FF", "#2FE1C3", "#50DB7A", "#B6825D", "#1EF61A", "#F0CF2D", "#ED9333", "#FF6969", "#DC2424"];
 
 function createId() {
@@ -287,8 +288,10 @@ function draw() {
     openPanel();
     return;
   }
-  el.flipSound.currentTime = 0;
-  el.flipSound.play().catch(() => {});
+  if (flipSoundEnabled) {
+    el.flipSound.currentTime = 0;
+    el.flipSound.play().catch(() => {});
+  }
   randomizeCardColor();
   const wasRevealed = hasResult;
   el.resultText.textContent = picked.name;
