@@ -235,8 +235,8 @@ function cardRotation() {
   return hasResult ? 180 : 0;
 }
 
-function restartFlipFromCurrentAngle() {
-  el.cardInner.style.setProperty("--redraw-start", `${cardRotation()}deg`);
+function restartFlipFromCurrentAngle(startAngle = cardRotation()) {
+  el.cardInner.style.setProperty("--redraw-start", `${startAngle}deg`);
   el.cardInner.style.setProperty("--redraw-end", "540deg");
   el.drawCard.classList.remove("is-redrawing");
   void el.cardInner.offsetWidth;
@@ -296,8 +296,8 @@ function draw() {
   renderStage();
   renderPlans();
   renderOptions();
-  if (wasRevealed) restartFlipFromCurrentAngle();
-  else el.drawCard.classList.add("is-flipped");
+  if (!wasRevealed) el.drawCard.classList.add("is-flipped");
+  restartFlipFromCurrentAngle(wasRevealed ? cardRotation() : 0);
   const cycle = ++drawCycle;
   window.setTimeout(() => {
     if (cycle !== drawCycle) return;
