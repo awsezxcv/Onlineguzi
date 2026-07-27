@@ -80,6 +80,7 @@ h1 { margin: 0; font-size: 26px; letter-spacing: 0; }
   inset: 0;
   transform-style: preserve-3d;
   -webkit-transform-style: preserve-3d;
+  will-change: transform;
   transition: transform 720ms cubic-bezier(.2, .8, .2, 1);
   -webkit-transition: -webkit-transform 720ms cubic-bezier(.2, .8, .2, 1);
 }

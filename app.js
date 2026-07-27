@@ -295,17 +295,18 @@ function draw() {
   if (state.noRepeat) picked.selected = true;
   hasResult = true;
   el.drawHint.textContent = state.noRepeat ? "结果已从后续抽取中移除" : "再次点击卡片，重新随机抽取";
-  save();
-  renderStage();
-  renderPlans();
-  renderOptions();
   if (!wasRevealed) el.drawCard.classList.add("is-flipped");
   restartFlipFromCurrentAngle(wasRevealed ? cardRotation() : 0);
   const cycle = ++drawCycle;
+  window.requestAnimationFrame(() => {
+    if (cycle !== drawCycle) return;
+    save();
+    renderStage();
+  });
   window.setTimeout(() => {
     if (cycle !== drawCycle) return;
     recordHistory(picked.name);
-  }, 360);
+  }, 760);
   window.setTimeout(() => {
     if (cycle === drawCycle) el.drawCard.classList.remove("is-redrawing");
   }, 740);
