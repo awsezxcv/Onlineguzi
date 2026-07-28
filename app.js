@@ -2,6 +2,7 @@ const storageKey = "online-chaigu-tool-v2";
 const legacyStorageKey = "online-chaigu-tool-v1";
 const flipSoundEnabled = false;
 const palette = ["#F7235F", "#ED38AA", "#1F4EEA", "#7394FF", "#2FE1C3", "#50DB7A", "#B6825D", "#1EF61A", "#F0CF2D", "#ED9333", "#FF6969", "#DC2424"];
+const optionNameCollator = new Intl.Collator("zh-Hans-CN", { numeric: true, sensitivity: "base" });
 
 function createId() {
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
@@ -103,6 +104,7 @@ const el = {
   noRepeat: document.querySelector("#noRepeatToggle"),
   totalWeight: document.querySelector("#totalWeight"),
   options: document.querySelector("#optionList"),
+  sortOptions: document.querySelector("#sortOptions"),
   addOption: document.querySelector("#addOption"),
   validation: document.querySelector("#validationMessage")
 };
@@ -496,6 +498,18 @@ el.options.addEventListener("click", event => {
   state.options = state.options.filter(option => option.id !== button.dataset.id);
   save();
   renderAll();
+});
+
+el.sortOptions.addEventListener("click", () => {
+  state.options.sort((left, right) => {
+    const leftName = left.name.trim();
+    const rightName = right.name.trim();
+    if (!leftName) return 1;
+    if (!rightName) return -1;
+    return optionNameCollator.compare(leftName, rightName);
+  });
+  save();
+  renderOptions();
 });
 
 el.addOption.addEventListener("click", () => {

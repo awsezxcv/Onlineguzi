@@ -202,6 +202,8 @@ h3 { font-size: 17px; }
 .switch input:checked + span::before { transform: translateX(20px); }
 
 .options-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin: 26px 0 13px; }
+.options-title-row { display: flex; align-items: center; gap: 10px; }
+.sort-options { padding: 0; border: 0; color: var(--blue-dark); background: transparent; font-size: 13px; font-weight: 700; }
 .options-heading p { margin-top: 5px; }
 #totalWeight { color: var(--muted); font-size: 13px; white-space: nowrap; }
 .option-list { display: grid; gap: 9px; }

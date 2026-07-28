@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#f7f8fc" />
     <link rel="icon" href="data:," />
     <title>在线拆谷工具</title>
-    <link rel="stylesheet" href="style.css?v=23" />
+    <link rel="stylesheet" href="style.css?v=24" />
   </head>
   <body>
     <main class="app-shell">
@@ -82,7 +82,10 @@
 
           <div class="options-heading">
             <div>
-              <h3>选项与权重</h3>
+              <div class="options-title-row">
+                <h3>选项与权重</h3>
+                <button class="sort-options" id="sortOptions" type="button">整理选项</button>
+              </div>
               <p>权重越高，抽中的概率越大</p>
             </div>
             <span id="totalWeight">总权重 0</span>
@@ -115,6 +118,6 @@
     </main>
     <audio id="shuffleSound" preload="auto" src="assets/audio/daluan.mp3"></audio>
     <audio id="flipSound" preload="auto" src="assets/audio/fanzhuan.mp3"></audio>
-    <script src="app.js?v=25"></script>
+    <script src="app.js?v=26"></script>
   </body>
 </html>
